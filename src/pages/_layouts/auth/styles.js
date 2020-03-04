@@ -41,11 +41,23 @@ export const Content = styled.div`
       font-size: 16px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      background: transparent;
+      background: #fff !important;
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+      }
 
       &::placeholder {
         color: #999;
       }
+    }
+
+    span {
+      font-weight: 700;
+      color: #ff4136;
+      margin-top: 8px;
     }
   }
 
