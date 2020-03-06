@@ -5,6 +5,8 @@ import {
   MdEdit,
   MdAdd,
   MdDeleteForever,
+  MdChevronLeft,
+  MdChevronRight,
 } from 'react-icons/md';
 
 import api from '~/services/api';
@@ -14,11 +16,15 @@ import { Status } from './styles';
 import Button from '~/components/Button';
 import DataTable from '~/components/DataTable';
 import Heading from '~/components/Heading';
+import Pagination from '~/components/Pagination';
 import Popover from '~/components/Popover';
 import PopoverButton from '~/components/PopoverButton';
+import Profile from '~/components/Profile';
 
 export default function OrdersList({ history, match }) {
   const [orders, setOrders] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalOrders, setTotalOrders] = useState('');
 
   const renderStatus = (order) => {
     const { canceled_at, start_date, end_date } = order;
@@ -32,24 +38,37 @@ export default function OrdersList({ history, match }) {
       return <Status status="pickedup">Picked up</Status>;
   };
 
+  const renderProfile = (profile) => {
+    const { name, avatar } = profile;
+    return <Profile name={name} avatar={avatar ? avatar.url : null} />;
+  };
+
   useEffect(() => {
     async function fetchOrders() {
-      const response = await api.get('/orders');
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      const response = await api.get('/orders', { params: { page } });
 
-      const data = response.data.map((order) => {
+      const data = response.data.rows.map((order) => {
         const status = renderStatus(order);
+        const profile = renderProfile(order.deliveryman);
 
         return {
           ...order,
+          profile,
           status,
         };
       });
 
       setOrders(data);
+      setTotalOrders(response.data.count);
     }
 
     fetchOrders();
-  }, []);
+  }, [page]);
 
   function handleActionClick(action, id) {
     const { url } = match;
@@ -60,6 +79,10 @@ export default function OrdersList({ history, match }) {
       default:
         history.push(url);
     }
+  }
+
+  async function handlePagination(action) {
+    await setPage(action === 'prev' ? page - 1 : page + 1);
   }
 
   return (
@@ -90,7 +113,7 @@ export default function OrdersList({ history, match }) {
             <tr key={order.id}>
               <td>#{order.id}</td>
               <td>{order.recipient.name}</td>
-              <td>{order.deliveryman.name}</td>
+              <td>{order.profile}</td>
               <td>{order.recipient.city}</td>
               <td>{order.recipient.state}</td>
               <td>{order.status}</td>
@@ -117,8 +140,22 @@ export default function OrdersList({ history, match }) {
           ))}
         </tbody>
       </DataTable>
-      <ul />
+      {totalOrders > 10 && (
+        <Pagination>
+          <button
+            disabled={page === 1}
+            onClick={() => handlePagination('prev')}
+          >
+            <MdChevronLeft size={14} color="#fff" />
+          </button>
+          <button
+            disabled={orders.length < 10}
+            onClick={() => handlePagination('next')}
+          >
+            <MdChevronRight size={14} color="#fff" />
+          </button>
+        </Pagination>
+      )}
     </>
   );
 }
-

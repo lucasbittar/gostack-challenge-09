@@ -9,7 +9,7 @@ import Heading from '~/components/Heading';
 import Select from '~/components/Select';
 import Button from '~/components/Button';
 
-export default function OrderEdit({ history, match }) {
+export default function OrderForm({ history, match }) {
   const isCreate = match.url.includes('create');
   const [saving, setSaving] = useState(false);
   const [recipients, setRecipients] = useState([]);
