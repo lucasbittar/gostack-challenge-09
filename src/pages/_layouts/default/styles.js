@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  height: 100%;
   background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 60px;
 `;

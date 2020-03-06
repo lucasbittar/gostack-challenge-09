@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Heading from '~/components/Heading';
+
 export default function Deliverymen() {
-  return <h1>Deliverymen</h1>;
+  return <Heading title="Deliverymen" />;
 }

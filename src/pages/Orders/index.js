@@ -1,8 +1,20 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-import api from '~/services/api';
+import Wrapper from '~/components/Wrapper';
 
-export default function Orders() {
-  api.get('/deliverymen');
-  return <h1>Orders</h1>;
+import OrdersList from '~/pages/OrdersList';
+import OrderEdit from '~/pages/OrderEdit';
+
+export default function Orders({ match }) {
+  const { url } = match;
+  return (
+    <Wrapper>
+      <Switch>
+        <Route path={`${url}`} exact component={OrdersList} />
+        <Route path={`${url}/edit/:order_id`} component={OrderEdit} />
+        <Route path={`${url}/create`} component={OrderEdit} />
+      </Switch>
+    </Wrapper>
+  );
 }
