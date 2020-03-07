@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 
 import { loginRequest } from '~/store/modules/auth/actions';
 
+import { InputControl } from '~/components/Layout';
+
 import logo from '~/assets/fastfeet-logo.svg';
 
 const schema = Yup.object().shape({
@@ -29,14 +31,14 @@ export default function Login() {
       <img src={logo} alt="Fastfeet" />
 
       <Form schema={schema} onSubmit={handleSubmit}>
-        <div className="input-control">
+        <InputControl uppercase>
           <label>E-mail:</label>
           <Input name="email" type="email" placeholder="E-mail" />
-        </div>
-        <div className="input-control">
+        </InputControl>
+        <InputControl uppercase>
           <label>Password:</label>
           <Input name="password" type="password" placeholder="Password" />
-        </div>
+        </InputControl>
         <button type="submit">{loading ? 'Loading...' : 'Submit'}</button>
       </Form>
     </>

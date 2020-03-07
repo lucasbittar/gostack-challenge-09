@@ -11,23 +11,4 @@ export const Container = styled.div`
   form {
     width: 100%;
   }
-
-  label {
-    text-transform: none !important;
-  }
-
-  .row {
-    display: flex;
-    width: 100%;
-  }
-
-  .col-full {
-    width: 100%;
-    margin: 0 ${gutter};
-  }
-
-  .col-half {
-    width: 50%;
-    margin: 0 ${gutter};
-  }
 `;

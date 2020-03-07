@@ -43,42 +43,4 @@ export default createGlobalStyle`
     font-weight: bold;
   }
 
-  .input-control {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-bottom: 15px;
-
-    label {
-      text-transform: uppercase;
-      color: #444;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    input {
-      padding: 0 12px;
-      height: 45px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background: #fff !important;
-
-      &:-webkit-autofill,
-      &:-webkit-autofill:hover,
-      &:-webkit-autofill:focus {
-        -webkit-box-shadow: 0 0 0px 1000px white inset;
-      }
-
-      &::placeholder {
-        color: #999;
-      }
-    }
-
-    span {
-      font-weight: 700;
-      color: #ff4136;
-      margin-top: 8px;
-    }
-  }
 `;

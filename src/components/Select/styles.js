@@ -7,8 +7,7 @@ export const SelectWrapper = styled.div`
   svg {
     position: absolute;
     right: 10px;
-    top: 50%;
-    margin-top: -13px;
+    top: 10px;
   }
 
   select {

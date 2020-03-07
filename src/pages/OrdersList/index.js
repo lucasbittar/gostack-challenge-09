@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDebounce } from 'use-debounce';
 import {
   MdMoreHoriz,
   MdRemoveRedEye,
@@ -13,6 +14,8 @@ import api from '~/services/api';
 
 import { Status } from './styles';
 
+import { Actions, InputControl } from '~/components/Layout';
+
 import Button from '~/components/Button';
 import DataTable from '~/components/DataTable';
 import Heading from '~/components/Heading';
@@ -25,6 +28,8 @@ export default function OrdersList({ history, match }) {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [totalOrders, setTotalOrders] = useState('');
+  const [query, setQuery] = useState('');
+  const [queryInput] = useDebounce(query, 500);
 
   const renderStatus = (order) => {
     const { canceled_at, start_date, end_date } = order;
@@ -50,7 +55,9 @@ export default function OrdersList({ history, match }) {
         left: 0,
         behavior: 'smooth',
       });
-      const response = await api.get('/orders', { params: { page } });
+      const response = await api.get('/orders', {
+        params: { page, search: queryInput !== '' ? queryInput : null },
+      });
 
       const data = response.data.rows.map((order) => {
         const status = renderStatus(order);
@@ -68,7 +75,7 @@ export default function OrdersList({ history, match }) {
     }
 
     fetchOrders();
-  }, [page]);
+  }, [page, queryInput]);
 
   function handleActionClick(action, id) {
     const { url } = match;
@@ -87,15 +94,23 @@ export default function OrdersList({ history, match }) {
 
   return (
     <>
-      <Heading title="Orders">
+      <Heading title="Orders" />
+      <Actions>
+        <InputControl noMargin autoWidth>
+          <input
+            type="text"
+            placeholder="Find orders"
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </InputControl>
         <Button
           primary
-          click={() => history.push('/orders/create')}
+          onClick={() => history.push('/orders/create')}
           icon={<MdAdd color="#fff" size={16} />}
         >
           New Order
         </Button>
-      </Heading>
+      </Actions>
       <DataTable>
         <thead>
           <tr>

@@ -1,44 +1,51 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { MdCheck, MdChevronLeft } from 'react-icons/md';
 
+import {
+  orderCreateRequest,
+  orderUpdateRequest,
+} from '~/store/modules/order/actions';
+
 import api from '~/services/api';
 
+import Button from '~/components/Button';
 import FormWrapper from '~/components/FormWrapper';
 import Heading from '~/components/Heading';
 import Select from '~/components/Select';
-import Button from '~/components/Button';
+import { Row, Column, InputControl } from '~/components/Layout';
+
+const schema = Yup.object().shape({
+  product: Yup.string().required('Please give a product name'),
+  deliveryman: Yup.string().required('Please choose a deliveryman'),
+  recipient: Yup.string().required('Please choose a recipient'),
+});
 
 export default function OrderForm({ history, match }) {
   const isCreate = match.url.includes('create');
-  const [saving, setSaving] = useState(false);
   const [recipients, setRecipients] = useState([]);
   const [deliverymen, setDeliverymen] = useState([]);
+  const [product, setProduct] = useState('');
   const [recipient, setRecipient] = useState('');
   const [deliveryman, setDeliveryman] = useState('');
-  const [product, setProduct] = useState('');
   const [orderId] = useState(match.params.order_id);
+
+  const saving = useSelector((state) => state.order.saving);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchRecipients() {
       const response = await api.get('/recipients');
 
       const data = response.data.map((recipient) => ({
-        value: recipient.id,
-        label: recipient.name,
+        id: recipient.id,
+        title: recipient.name,
       }));
 
-      if (isCreate) {
-        setRecipients([
-          {
-            value: '',
-            label: 'Select a recipient',
-          },
-          ...data,
-        ]);
-      } else {
-        setRecipients(data);
-      }
+      setRecipients(data);
     }
     fetchRecipients();
 
@@ -46,21 +53,11 @@ export default function OrderForm({ history, match }) {
       const response = await api.get('/deliverymen');
 
       const data = response.data.map((deliveryman) => ({
-        value: deliveryman.id,
-        label: deliveryman.name,
+        id: deliveryman.id,
+        title: deliveryman.name,
       }));
 
-      if (isCreate) {
-        setDeliverymen([
-          {
-            value: '',
-            label: 'Select a deliveryman',
-          },
-          ...data,
-        ]);
-      } else {
-        setDeliverymen(data);
-      }
+      setDeliverymen(data);
     }
     fetchDeliverymen();
 
@@ -92,87 +89,90 @@ export default function OrderForm({ history, match }) {
   }
 
   async function handleSubmit() {
-    try {
-      setSaving(true);
-      if (isCreate) {
-        await api.post('/orders', {
-          recipient_id: recipient,
-          deliveryman_id: deliveryman,
-          product,
-        });
-        toast.success('Order successfully created!');
-      } else {
-        await api.put(`/orders/${orderId}`, {
-          recipient_id: recipient,
-          deliveryman_id: deliveryman,
-          product,
-        });
-        toast.success('Order successfully saved!');
-      }
-      setSaving(false);
-    } catch (err) {
-      setSaving(false);
-      console.tron.log('RESPONSE FAILED', err.data);
-    }
+    schema
+      .validate({
+        product,
+        recipient,
+        deliveryman,
+      })
+      .catch(function(err) {
+        toast.error(err.message);
+      })
+      .then(function(valid) {
+        if (valid) {
+          const order = {
+            recipient_id: recipient,
+            deliveryman_id: deliveryman,
+            product,
+          };
+          if (isCreate) {
+            dispatch(orderCreateRequest(order));
+          } else {
+            dispatch(orderUpdateRequest(orderId, order));
+          }
+        }
+      });
   }
 
   return (
     <>
       <Heading title={isCreate ? 'New Order' : 'Edit Order'}>
         <Button
-          click={() => history.push('/orders')}
+          onClick={() => history.push('/orders')}
           icon={<MdChevronLeft color="#fff" size={16} />}
         >
           Back
         </Button>
         <Button
           primary
-          click={handleSubmit}
+          onClick={handleSubmit}
           icon={!saving && <MdCheck color="#fff" size={16} />}
         >
           {saving ? 'Saving...' : 'Save'}
         </Button>
       </Heading>
       <FormWrapper>
-        <form>
-          <div className="row">
-            <div className="col-half">
-              <div className="input-control">
+        <form schema={schema}>
+          <Row>
+            <Column size={50}>
+              <InputControl>
                 <label>Recipient</label>
                 <Select
                   name="recipient"
                   value={recipient}
-                  change={(e) => handleRecipientChange(e)}
+                  onChange={(e) => handleRecipientChange(e)}
+                  placeholder="Select a recipient"
                   options={recipients}
                 />
-              </div>
-            </div>
-            <div className="col-half">
-              <div className="input-control">
+              </InputControl>
+            </Column>
+            <Column size={50}>
+              <InputControl>
                 <label>Deliveryman</label>
                 <Select
                   name="deliveryman"
-                  change={(e) => handleDeliverymanChange(e)}
                   value={deliveryman}
+                  onChange={(e) => handleDeliverymanChange(e)}
+                  placeholder="Select a deliveryman"
                   options={deliverymen}
                 />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-full">
-              <div className="input-control">
+              </InputControl>
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <InputControl>
                 <label>Product Name:</label>
                 <input
-                  value={product}
                   name="product"
-                  type="product"
+                  value={product}
                   onChange={(e) => handleProductChange(e)}
+                  type="text"
                   placeholder="Playstation 4"
                 />
-              </div>
-            </div>
-          </div>
+              </InputControl>
+            </Column>
+          </Row>
         </form>
       </FormWrapper>
     </>

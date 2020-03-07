@@ -1422,6 +1422,10 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
+"@unform/web@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@unform/web/-/web-2.0.0.tgz#8fc88ceb909400054c56c0ff0ad6df5cc3ea6ec2"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -9559,6 +9563,10 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-debounce@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-3.3.0.tgz#f9c1f09d40ddbdf4306b80066b04bb5d46b6a904"
 
 use@^3.1.0:
   version "3.1.1"
