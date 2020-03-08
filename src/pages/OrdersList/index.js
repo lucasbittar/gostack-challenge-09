@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce';
 import {
   MdMoreHoriz,
@@ -10,7 +11,7 @@ import {
   MdChevronRight,
 } from 'react-icons/md';
 
-import api from '~/services/api';
+import { orderFetchAllRequest } from '~/store/modules/order/actions';
 
 import { Status } from './styles';
 
@@ -25,11 +26,11 @@ import PopoverButton from '~/components/PopoverButton';
 import Profile from '~/components/Profile';
 
 export default function OrdersList({ history, match }) {
-  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalOrders, setTotalOrders] = useState('');
   const [query, setQuery] = useState('');
   const [queryInput] = useDebounce(query, 500);
+
+  const dispatch = useDispatch();
 
   const renderStatus = (order) => {
     const { canceled_at, start_date, end_date } = order;
@@ -48,6 +49,21 @@ export default function OrdersList({ history, match }) {
     return <Profile name={name} avatar={avatar ? avatar.url : null} />;
   };
 
+  const ordersTotal = useSelector((state) => state.order.ordersTotal);
+
+  const orders = useSelector((state) =>
+    state.order.orders.map((orderItem) => {
+      const status = renderStatus(orderItem);
+      const profile = renderProfile(orderItem.deliveryman);
+
+      return {
+        ...orderItem,
+        profile,
+        status,
+      };
+    })
+  );
+
   useEffect(() => {
     async function fetchOrders() {
       window.scroll({
@@ -55,27 +71,17 @@ export default function OrdersList({ history, match }) {
         left: 0,
         behavior: 'smooth',
       });
-      const response = await api.get('/orders', {
-        params: { page, search: queryInput !== '' ? queryInput : null },
-      });
 
-      const data = response.data.rows.map((order) => {
-        const status = renderStatus(order);
-        const profile = renderProfile(order.deliveryman);
+      const ordersParams = {
+        page,
+        search: queryInput !== '' ? queryInput : null,
+      };
 
-        return {
-          ...order,
-          profile,
-          status,
-        };
-      });
-
-      setOrders(data);
-      setTotalOrders(response.data.count);
+      dispatch(orderFetchAllRequest(ordersParams));
     }
 
     fetchOrders();
-  }, [page, queryInput]);
+  }, [page, queryInput, dispatch]);
 
   function handleActionClick(action, id) {
     const { url } = match;
@@ -155,7 +161,7 @@ export default function OrdersList({ history, match }) {
           ))}
         </tbody>
       </DataTable>
-      {totalOrders > 10 && (
+      {ordersTotal > 10 && (
         <Pagination>
           <button
             disabled={page === 1}

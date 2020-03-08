@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
@@ -7,9 +7,12 @@ import { MdCheck, MdChevronLeft } from 'react-icons/md';
 import {
   orderCreateRequest,
   orderUpdateRequest,
+  orderFetchRequest,
+  orderInputChange,
 } from '~/store/modules/order/actions';
 
-import api from '~/services/api';
+import { recipientFetchAllRequest } from '~/store/modules/recipient/actions';
+import { deliverymanFetchAllRequest } from '~/store/modules/deliveryman/actions';
 
 import Button from '~/components/Button';
 import FormWrapper from '~/components/FormWrapper';
@@ -25,67 +28,54 @@ const schema = Yup.object().shape({
 
 export default function OrderForm({ history, match }) {
   const isCreate = match.url.includes('create');
-  const [recipients, setRecipients] = useState([]);
-  const [deliverymen, setDeliverymen] = useState([]);
-  const [product, setProduct] = useState('');
-  const [recipient, setRecipient] = useState('');
-  const [deliveryman, setDeliveryman] = useState('');
-  const [orderId] = useState(match.params.order_id);
+  const { order_id } = match.params;
 
   const saving = useSelector((state) => state.order.saving);
+  const product = useSelector((state) => state.order.product);
+  const deliveryman = useSelector((state) => state.order.deliveryman);
+  const recipient = useSelector((state) => state.order.recipient);
+  const recipients = useSelector((state) =>
+    state.recipient.recipients.map((r) => ({
+      id: r.id,
+      title: r.name,
+    }))
+  );
+  const deliverymen = useSelector((state) =>
+    state.deliveryman.deliverymen.map((d) => ({
+      id: d.id,
+      title: d.name,
+    }))
+  );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchRecipients() {
-      const response = await api.get('/recipients');
-
-      const data = response.data.map((recipient) => ({
-        id: recipient.id,
-        title: recipient.name,
-      }));
-
-      setRecipients(data);
+      dispatch(recipientFetchAllRequest());
     }
     fetchRecipients();
 
     async function fetchDeliverymen() {
-      const response = await api.get('/deliverymen');
-
-      const data = response.data.map((deliveryman) => ({
-        id: deliveryman.id,
-        title: deliveryman.name,
-      }));
-
-      setDeliverymen(data);
+      dispatch(deliverymanFetchAllRequest());
     }
     fetchDeliverymen();
 
     async function fetchOrder() {
-      const response = await api.get(`/orders/${orderId}`);
-
-      const { product, recipient_id, deliveryman_id } = response.data;
-
-      setProduct(product);
-      setRecipient(recipient_id);
-      setDeliveryman(deliveryman_id);
+      dispatch(orderFetchRequest(order_id));
     }
 
     if (!isCreate) {
       fetchOrder();
+    } else {
+      // Cleanup fields when creating new order
+      dispatch(orderInputChange('product', ''));
+      dispatch(orderInputChange('deliveryman', ''));
+      dispatch(orderInputChange('recipient', ''));
     }
-  }, [orderId, isCreate]);
+  }, [order_id, isCreate, dispatch]);
 
-  function handleProductChange(e) {
-    setProduct(e.target.value);
-  }
-
-  function handleDeliverymanChange(e) {
-    setDeliveryman(e.target.value);
-  }
-
-  function handleRecipientChange(e) {
-    setRecipient(e.target.value);
+  function handleInputChange(input, e) {
+    dispatch(orderInputChange(input, e.target.value));
   }
 
   async function handleSubmit() {
@@ -108,7 +98,7 @@ export default function OrderForm({ history, match }) {
           if (isCreate) {
             dispatch(orderCreateRequest(order));
           } else {
-            dispatch(orderUpdateRequest(orderId, order));
+            dispatch(orderUpdateRequest(order_id, order));
           }
         }
       });
@@ -116,7 +106,7 @@ export default function OrderForm({ history, match }) {
 
   return (
     <>
-      <Heading title={isCreate ? 'New Order' : 'Edit Order'}>
+      <Heading title={isCreate ? 'Create Order' : 'Edit Order'}>
         <Button
           onClick={() => history.push('/orders')}
           icon={<MdChevronLeft color="#fff" size={16} />}
@@ -140,7 +130,7 @@ export default function OrderForm({ history, match }) {
                 <Select
                   name="recipient"
                   value={recipient}
-                  onChange={(e) => handleRecipientChange(e)}
+                  onChange={(e) => handleInputChange('recipient', e)}
                   placeholder="Select a recipient"
                   options={recipients}
                 />
@@ -152,7 +142,7 @@ export default function OrderForm({ history, match }) {
                 <Select
                   name="deliveryman"
                   value={deliveryman}
-                  onChange={(e) => handleDeliverymanChange(e)}
+                  onChange={(e) => handleInputChange('deliveryman', e)}
                   placeholder="Select a deliveryman"
                   options={deliverymen}
                 />
@@ -166,7 +156,7 @@ export default function OrderForm({ history, match }) {
                 <input
                   name="product"
                   value={product}
-                  onChange={(e) => handleProductChange(e)}
+                  onChange={(e) => handleInputChange('product', e)}
                   type="text"
                   placeholder="Playstation 4"
                 />

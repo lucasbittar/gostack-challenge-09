@@ -42,6 +42,10 @@ export const InputControl = styled.div`
     border: 1px solid #ddd;
     border-radius: 4px;
     background: #fff !important;
+
+    &:placeholder {
+      color: #999;
+    }
   }
 
   label {

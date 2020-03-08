@@ -20,7 +20,7 @@ export const SelectWrapper = styled.div`
     border: 1px solid #ddd;
     border-radius: 4px;
     background: #fff;
-    color: #999;
+    color: #747474;
 
     &.active {
       color: #000;
