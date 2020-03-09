@@ -68,9 +68,10 @@ export default function OrderForm({ history, match }) {
       fetchOrder();
     } else {
       // Cleanup fields when creating new order
-      dispatch(orderInputChange('product', ''));
-      dispatch(orderInputChange('deliveryman', ''));
-      dispatch(orderInputChange('recipient', ''));
+      const cleanupField = ['product', 'deliveryman', 'recipient'];
+      cleanupField.forEach((field) => {
+        dispatch(orderInputChange(field, ''));
+      });
     }
   }, [order_id, isCreate, dispatch]);
 

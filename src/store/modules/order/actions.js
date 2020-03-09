@@ -78,6 +78,25 @@ export function orderUpdateFailure() {
   };
 }
 
+export function orderRemoveRequest(id) {
+  return {
+    type: '@order/REMOVE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function orderRemoveSuccess() {
+  return {
+    type: '@order/REMOVE_SUCCESS',
+  };
+}
+
+export function orderRemoveFailure() {
+  return {
+    type: '@order/REMOVE_FAILURE',
+  };
+}
+
 export function orderInputChange(input, value) {
   return {
     type: '@order/INPUT_CHANGE',

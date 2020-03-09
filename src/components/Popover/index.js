@@ -19,7 +19,10 @@ function useComponentVisible(initialIsVisible) {
   };
 
   const handleClickOutside = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
+    if (
+      event.target.nodeName === 'BUTTON' ||
+      (ref.current && !ref.current.contains(event.target))
+    ) {
       setIsComponentVisible(false);
     }
   };
@@ -46,7 +49,7 @@ export default function Popover({ children, trigger }) {
   return (
     <Container ref={ref}>
       <button onClick={() => setIsComponentVisible(true)}>{trigger}</button>
-      <div className={isComponentVisible && 'active'}>
+      <div className={isComponentVisible ? 'active' : undefined}>
         <i>▲</i>
         <span>{children}</span>
       </div>

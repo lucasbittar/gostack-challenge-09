@@ -11,6 +11,8 @@ import GlobalStyle from './styles/global';
 import Routes from './routes';
 import history from './services/history';
 
+import Overlay from '~/components/Overlay';
+
 import { store, persistor } from './store';
 
 export default function App() {
@@ -20,6 +22,7 @@ export default function App() {
         <Router history={history}>
           <Routes />
           <GlobalStyle />
+          <Overlay />
           <ToastContainer
             transition={Slide}
             autoClose={3000}

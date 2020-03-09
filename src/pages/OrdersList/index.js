@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce';
 import {
@@ -11,7 +12,11 @@ import {
   MdChevronRight,
 } from 'react-icons/md';
 
-import { orderFetchAllRequest } from '~/store/modules/order/actions';
+import {
+  orderFetchAllRequest,
+  orderRemoveRequest,
+} from '~/store/modules/order/actions';
+import { openOverlay, closeOverlay } from '~/store/modules/overlay/actions';
 
 import { Status } from './styles';
 
@@ -20,6 +25,8 @@ import { Actions, InputControl } from '~/components/Layout';
 import Button from '~/components/Button';
 import DataTable from '~/components/DataTable';
 import Heading from '~/components/Heading';
+import OrderDetails from '~/components/OrderDetails';
+import OverlayRemove from '~/components/OverlayRemove';
 import Pagination from '~/components/Pagination';
 import Popover from '~/components/Popover';
 import PopoverButton from '~/components/PopoverButton';
@@ -47,6 +54,59 @@ export default function OrdersList({ history, match }) {
   const renderProfile = (profile) => {
     const { name, avatar } = profile;
     return <Profile name={name} avatar={avatar ? avatar.url : null} />;
+  };
+
+  const renderDetails = (order) => {
+    return (
+      <OrderDetails>
+        <strong>Order Info</strong>
+        <p>
+          {order.recipient.address}, {order.recipient.number}
+          {order.recipient.address_2 !== '' &&
+            ` - ${order.recipient.address_2}`}
+        </p>
+        <p>
+          {order.recipient.city} - {order.recipient.state}
+        </p>
+        <p>{order.recipient.zip_code}</p>
+        <hr />
+        <strong>Delivery dates:</strong>
+        <p>
+          <strong>Pickup:</strong>{' '}
+          {order.start_date !== null
+            ? format(new Date(order.start_date), 'dd/mm/yyyy')
+            : "Hasn't been picked up yet."}
+        </p>
+        <p>
+          <strong>Delivered:</strong>{' '}
+          {order.end_date !== null
+            ? format(new Date(order.end_date), 'dd/mm/yyyy')
+            : "Hasn't been delivered yet."}
+        </p>
+        {order.signature !== null && (
+          <>
+            <hr />
+            <strong>Recipient signature</strong>
+            <img src={order.signature.url} alt={order.recipient.name} />
+          </>
+        )}
+      </OrderDetails>
+    );
+  };
+
+  const renderRemove = (id) => {
+    return (
+      <OverlayRemove>
+        <h3>Are you sure?</h3>
+        <p>Confirming this action will remove this order permanently.</p>
+        <footer>
+          <Button onClick={() => dispatch(closeOverlay())}>Cancel</Button>
+          <Button primary onClick={() => dispatch(orderRemoveRequest(id))}>
+            Yes, I'm sure
+          </Button>
+        </footer>
+      </OverlayRemove>
+    );
   };
 
   const ordersTotal = useSelector((state) => state.order.ordersTotal);
@@ -88,6 +148,12 @@ export default function OrdersList({ history, match }) {
     switch (action) {
       case 'edit':
         history.push(`${url}/edit/${id}`);
+        break;
+      case 'view':
+        dispatch(openOverlay(renderDetails(id)));
+        break;
+      case 'remove':
+        dispatch(openOverlay(renderRemove(id)));
         break;
       default:
         history.push(url);
@@ -141,7 +207,7 @@ export default function OrdersList({ history, match }) {
               <td>
                 <Popover trigger={<MdMoreHoriz color="#666" size={18} />}>
                   <PopoverButton
-                    clickAction={() => handleActionClick('view', order.id)}
+                    clickAction={() => handleActionClick('view', order)}
                     icon={<MdRemoveRedEye color="#8E5BE8" size={16} />}
                     label="View"
                   />

@@ -6,6 +6,7 @@ import history from '~/services/history';
 import api from '~/services/api';
 
 import {
+  orderFetchAllRequest,
   orderFetchAllSuccess,
   orderFetchAllFailure,
   orderFetchSuccess,
@@ -15,6 +16,8 @@ import {
   orderUpdateSuccess,
   orderUpdateFailure,
 } from './actions';
+
+import { closeOverlay } from '../overlay/actions';
 
 export function* fetchAllOrders({ payload }) {
   try {
@@ -44,6 +47,20 @@ export function* fetchOrder({ payload }) {
     yield put(orderFetchFailure());
     history.push('/orders');
     toast.error('Order not found.');
+  }
+}
+
+export function* removeOrder({ payload }) {
+  try {
+    const { id } = payload;
+
+    yield call(api.delete, `orders/${id}`);
+
+    toast.success('Order successfully removed!');
+    yield put(closeOverlay());
+    yield put(orderFetchAllRequest());
+  } catch (err) {
+    toast.error('Something went wrong. Please try again');
   }
 }
 
@@ -88,4 +105,5 @@ export default all([
   takeLatest('@order/FETCH_REQUEST', fetchOrder),
   takeLatest('@order/CREATE_REQUEST', createOrder),
   takeLatest('@order/UPDATE_REQUEST', updateOrder),
+  takeLatest('@order/REMOVE_REQUEST', removeOrder),
 ]);
