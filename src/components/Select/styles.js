@@ -8,6 +8,7 @@ export const SelectWrapper = styled.div`
     position: absolute;
     right: 10px;
     top: 10px;
+    margin-top: 0;
   }
 
   select {
@@ -21,6 +22,11 @@ export const SelectWrapper = styled.div`
     border-radius: 4px;
     background: #fff;
     color: #747474;
+    transition: all 300ms ease-out;
+
+    &:focus {
+      border-color: #444;
+    }
 
     &.active {
       color: #000;

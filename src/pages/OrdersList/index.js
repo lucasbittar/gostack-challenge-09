@@ -3,13 +3,14 @@ import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from 'use-debounce';
 import {
-  MdMoreHoriz,
-  MdRemoveRedEye,
-  MdEdit,
   MdAdd,
-  MdDeleteForever,
   MdChevronLeft,
   MdChevronRight,
+  MdDeleteForever,
+  MdEdit,
+  MdMoreHoriz,
+  MdRemoveRedEye,
+  MdSearch,
 } from 'react-icons/md';
 
 import {
@@ -20,7 +21,7 @@ import { openOverlay, closeOverlay } from '~/store/modules/overlay/actions';
 
 import { Status } from './styles';
 
-import { Actions, InputControl } from '~/components/Layout';
+import { Actions, InputControl, NotFound } from '~/components/Layout';
 
 import Button from '~/components/Button';
 import DataTable from '~/components/DataTable';
@@ -166,14 +167,15 @@ export default function OrdersList({ history, match }) {
 
   return (
     <>
-      <Heading title="Orders" />
+      <Heading title="Manage Orders" />
       <Actions>
-        <InputControl noMargin autoWidth>
+        <InputControl noMargin autoWidth iconLeft>
           <input
             type="text"
             placeholder="Find orders"
             onChange={(e) => setQuery(e.target.value)}
           />
+          <MdSearch color="#999" size={21} />
         </InputControl>
         <Button
           primary
@@ -183,65 +185,73 @@ export default function OrdersList({ history, match }) {
           New Order
         </Button>
       </Actions>
-      <DataTable>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Recipient</th>
-            <th>Deliveryman</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id}>
-              <td>#{order.id}</td>
-              <td>{order.recipient.name}</td>
-              <td>{order.profile}</td>
-              <td>{order.recipient.city}</td>
-              <td>{order.recipient.state}</td>
-              <td>{order.status}</td>
-              <td>
-                <Popover trigger={<MdMoreHoriz color="#666" size={18} />}>
-                  <PopoverButton
-                    clickAction={() => handleActionClick('view', order)}
-                    icon={<MdRemoveRedEye color="#8E5BE8" size={16} />}
-                    label="View"
-                  />
-                  <PopoverButton
-                    clickAction={() => handleActionClick('edit', order.id)}
-                    icon={<MdEdit color="#4D85EE" size={16} />}
-                    label="Edit"
-                  />
-                  <PopoverButton
-                    clickAction={() => handleActionClick('remove', order.id)}
-                    icon={<MdDeleteForever color="#DE3B3B" size={16} />}
-                    label="Remove"
-                  />
-                </Popover>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </DataTable>
-      {ordersTotal > 10 && (
-        <Pagination>
-          <button
-            disabled={page === 1}
-            onClick={() => handlePagination('prev')}
-          >
-            <MdChevronLeft size={14} color="#fff" />
-          </button>
-          <button
-            disabled={orders.length < 10}
-            onClick={() => handlePagination('next')}
-          >
-            <MdChevronRight size={14} color="#fff" />
-          </button>
-        </Pagination>
+      {ordersTotal !== 0 ? (
+        <>
+          <DataTable>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Recipient</th>
+                <th>Deliveryman</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order.id}>
+                  <td>#{order.id}</td>
+                  <td>{order.recipient.name}</td>
+                  <td>{order.profile}</td>
+                  <td>{order.recipient.city}</td>
+                  <td>{order.recipient.state}</td>
+                  <td>{order.status}</td>
+                  <td>
+                    <Popover trigger={<MdMoreHoriz color="#666" size={18} />}>
+                      <PopoverButton
+                        clickAction={() => handleActionClick('view', order)}
+                        icon={<MdRemoveRedEye color="#8E5BE8" size={16} />}
+                        label="View"
+                      />
+                      <PopoverButton
+                        clickAction={() => handleActionClick('edit', order.id)}
+                        icon={<MdEdit color="#4D85EE" size={16} />}
+                        label="Edit"
+                      />
+                      <PopoverButton
+                        clickAction={() =>
+                          handleActionClick('remove', order.id)
+                        }
+                        icon={<MdDeleteForever color="#DE3B3B" size={16} />}
+                        label="Remove"
+                      />
+                    </Popover>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </DataTable>
+          {ordersTotal > 10 && (
+            <Pagination>
+              <button
+                disabled={page === 1}
+                onClick={() => handlePagination('prev')}
+              >
+                <MdChevronLeft size={14} color="#fff" />
+              </button>
+              <button
+                disabled={orders.length < 10}
+                onClick={() => handlePagination('next')}
+              >
+                <MdChevronRight size={14} color="#fff" />
+              </button>
+            </Pagination>
+          )}
+        </>
+      ) : (
+        <NotFound>No results were found. Try another query.</NotFound>
       )}
     </>
   );

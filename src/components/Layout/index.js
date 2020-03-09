@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const gutter = '15px';
 
@@ -32,6 +32,7 @@ export const InputControl = styled.div`
   display: flex;
   flex-direction: column;
   text-align: left;
+  position: relative;
   margin-bottom: ${(props) => (props.noMargin ? '0' : '15px')};
   width: ${(props) => (props.autoWidth ? 'auto' : '100%')};
 
@@ -42,6 +43,15 @@ export const InputControl = styled.div`
     border: 1px solid #ddd;
     border-radius: 4px;
     background: #fff !important;
+    transition: all 300ms ease-out;
+
+    &:focus {
+      border-color: #444;
+
+      + svg {
+        color: #444 !important;
+      }
+    }
 
     &:placeholder {
       color: #999;
@@ -56,7 +66,37 @@ export const InputControl = styled.div`
     margin-bottom: 8px;
   }
 
+  svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    transition: all 300ms ease-out;
+  }
+
+  ${(props) =>
+    props.iconLeft &&
+    css`
+      input {
+        padding-left: 40px;
+      }
+      svg {
+        top: 50%;
+        left: 10px;
+      }
+    `}
+
   @media screen and (max-width: 620px) {
     width: calc(100% - ${parseInt(gutter) * 2}px);
   }
+`;
+
+export const NotFound = styled.p`
+  margin-top: 24px;
+  font-size: 14px;
+  color: #444;
 `;
