@@ -1,8 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import history from '~/services/history';
+
+import { logOut } from '~/store/modules/auth/actions';
 
 import { Container, Content, Profile, Logout } from './styles';
 
@@ -18,6 +20,12 @@ const navigation = [
 export default function Header() {
   const { pathname } = history.location;
   const { name } = useSelector((state) => state.user.info);
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logOut());
+  }
+
   return (
     <Container>
       <Content>
@@ -39,7 +47,7 @@ export default function Header() {
         <aside>
           <Profile>
             <strong>{name}</strong>
-            <Logout>Logout</Logout>
+            <Logout onClick={handleLogout}>Logout</Logout>
           </Profile>
         </aside>
       </Content>

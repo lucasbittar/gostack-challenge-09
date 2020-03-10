@@ -26,7 +26,7 @@ import { Actions, InputControl, NotFound } from '~/components/Layout';
 import Button from '~/components/Button';
 import DataTable from '~/components/DataTable';
 import Heading from '~/components/Heading';
-import OrderDetails from '~/components/OrderDetails';
+import OverlayDetails from '~/components/OverlayDetails';
 import OverlayRemove from '~/components/OverlayRemove';
 import Pagination from '~/components/Pagination';
 import Popover from '~/components/Popover';
@@ -59,7 +59,15 @@ export default function OrdersList({ history, match }) {
 
   const renderDetails = (order) => {
     return (
-      <OrderDetails>
+      <OverlayDetails>
+        {order.canceled_at !== null && (
+          <h4>
+            <span>
+              This order was canceled on{' '}
+              {format(new Date(order.canceled_at), "PPP 'at' p")}
+            </span>
+          </h4>
+        )}
         <strong>Order Info</strong>
         <p>
           {order.recipient.address}, {order.recipient.number}
@@ -91,7 +99,7 @@ export default function OrdersList({ history, match }) {
             <img src={order.signature.url} alt={order.recipient.name} />
           </>
         )}
-      </OrderDetails>
+      </OverlayDetails>
     );
   };
 
@@ -182,7 +190,7 @@ export default function OrdersList({ history, match }) {
           onClick={() => history.push('/orders/create')}
           icon={<MdAdd color="#fff" size={16} />}
         >
-          New Order
+          New
         </Button>
       </Actions>
       {ordersTotal !== 0 ? (

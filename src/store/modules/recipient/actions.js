@@ -41,14 +41,14 @@ export function recipientFetchFailure() {
 export function recipientCreateRequest(data) {
   return {
     type: '@recipient/CREATE_REQUEST',
-    payload: { ...data },
+    payload: { data },
   };
 }
 
 export function recipientCreateSuccess(data) {
   return {
     type: '@recipient/CREATE_SUCCESS',
-    payload: { ...data },
+    payload: { data },
   };
 }
 
@@ -61,7 +61,7 @@ export function recipientCreateFailure() {
 export function recipientUpdateRequest(id, data) {
   return {
     type: '@recipient/UPDATE_REQUEST',
-    payload: { id, ...data },
+    payload: { id, data },
   };
 }
 
@@ -75,6 +75,25 @@ export function recipientUpdateSuccess(id, data) {
 export function recipientUpdateFailure() {
   return {
     type: '@recipient/UPDATE_FAILURE',
+  };
+}
+
+export function recipientRemoveRequest(id) {
+  return {
+    type: '@recipient/REMOVE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function recipientRemoveSuccess() {
+  return {
+    type: '@recipient/REMOVE_SUCCESS',
+  };
+}
+
+export function recipientRemoveFailure() {
+  return {
+    type: '@recipient/REMOVE_FAILURE',
   };
 }
 

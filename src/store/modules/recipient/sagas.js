@@ -6,6 +6,7 @@ import history from '~/services/history';
 import api from '~/services/api';
 
 import {
+  recipientFetchAllRequest,
   recipientFetchAllSuccess,
   recipientFetchAllFailure,
   recipientFetchSuccess,
@@ -15,6 +16,8 @@ import {
   recipientUpdateSuccess,
   recipientUpdateFailure,
 } from './actions';
+
+import { closeOverlay } from '../overlay/actions';
 
 export function* fetchAllRecipients({ payload }) {
   try {
@@ -47,15 +50,25 @@ export function* fetchRecipient({ payload }) {
   }
 }
 
+export function* removeRecipient({ payload }) {
+  try {
+    const { id } = payload;
+
+    yield call(api.delete, `recipients/${id}`);
+
+    toast.success('Recipient successfully removed!');
+    yield put(closeOverlay());
+    yield put(recipientFetchAllRequest());
+  } catch (err) {
+    toast.error('Something went wrong. Please try again');
+  }
+}
+
 export function* createRecipient({ payload }) {
   try {
-    const { product, deliveryman_id, recipient_id } = payload;
+    const { data } = payload;
 
-    const response = yield call(api.post, `recipients`, {
-      recipient_id,
-      deliveryman_id,
-      product,
-    });
+    const response = yield call(api.post, `recipients`, data);
 
     yield put(recipientCreateSuccess(response.data));
     toast.success('Recipient successfully created!');
@@ -67,13 +80,9 @@ export function* createRecipient({ payload }) {
 
 export function* updateRecipient({ payload }) {
   try {
-    const { id, product, deliveryman_id, recipient_id } = payload;
+    const { id, data } = payload;
 
-    const response = yield call(api.put, `recipients/${id}`, {
-      recipient_id,
-      deliveryman_id,
-      product,
-    });
+    const response = yield call(api.put, `recipients/${id}`, data);
 
     yield put(recipientUpdateSuccess(response.data));
     toast.success('Recipient successfully updated!');
@@ -88,4 +97,5 @@ export default all([
   takeLatest('@recipient/FETCH_REQUEST', fetchRecipient),
   takeLatest('@recipient/CREATE_REQUEST', createRecipient),
   takeLatest('@recipient/UPDATE_REQUEST', updateRecipient),
+  takeLatest('@recipient/REMOVE_REQUEST', removeRecipient),
 ]);

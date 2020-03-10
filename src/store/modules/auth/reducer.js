@@ -23,6 +23,11 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.loading = false;
         break;
       }
+      case '@auth/LOGOUT': {
+        draft.token = null;
+        draft.loggedIn = false;
+        break;
+      }
       default:
         return state;
     }

@@ -8,8 +8,6 @@ export const Status = styled.span`
   text-transform: uppercase;
   font-weight: bold;
   position: relative;
-  width: auto !important;
-  display: inline-block;
 
   &:before {
     position: absolute;
@@ -25,7 +23,7 @@ export const Status = styled.span`
   ${(props) =>
     props.status === 'pending' &&
     css`
-      background: #f0f0df !important;
+      background: #f0f0df;
       color: #c1bc35;
       &:before {
         background: #c1bc35;
@@ -35,7 +33,7 @@ export const Status = styled.span`
   ${(props) =>
     props.status === 'delivered' &&
     css`
-      background: #dff0df !important;
+      background: #dff0df;
       color: #2ca42b;
       &:before {
         background: #2ca42b;
@@ -45,7 +43,7 @@ export const Status = styled.span`
   ${(props) =>
     props.status === 'pickedup' &&
     css`
-      background: #bad2ff !important;
+      background: #bad2ff;
       color: #4d85ee;
       &:before {
         background: #4d85ee;
@@ -55,7 +53,7 @@ export const Status = styled.span`
   ${(props) =>
     props.status === 'canceled' &&
     css`
-      background: #fab0b0 !important;
+      background: #fab0b0;
       color: #de3b3b;
       &:before {
         background: #de3b3b;

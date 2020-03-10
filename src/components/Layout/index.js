@@ -100,3 +100,8 @@ export const NotFound = styled.p`
   font-size: 14px;
   color: #444;
 `;
+
+export const IssueCanceled = styled.span`
+  font-size: 12px;
+  color: #de3b3b !important;
+`;

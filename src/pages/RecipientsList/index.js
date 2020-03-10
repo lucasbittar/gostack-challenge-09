@@ -12,9 +12,9 @@ import {
 } from 'react-icons/md';
 
 import {
-  deliverymanFetchAllRequest,
-  deliverymanRemoveRequest,
-} from '~/store/modules/deliveryman/actions';
+  recipientFetchAllRequest,
+  recipientRemoveRequest,
+} from '~/store/modules/recipient/actions';
 import { openOverlay, closeOverlay } from '~/store/modules/overlay/actions';
 
 import { Actions, InputControl, NotFound } from '~/components/Layout';
@@ -26,31 +26,22 @@ import OverlayRemove from '~/components/OverlayRemove';
 import Pagination from '~/components/Pagination';
 import Popover from '~/components/Popover';
 import PopoverButton from '~/components/PopoverButton';
-import Profile from '~/components/Profile';
 
-export default function DeliverymenList({ history, match }) {
+export default function RecipientsList({ history, match }) {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
   const [queryInput] = useDebounce(query, 500);
 
   const dispatch = useDispatch();
 
-  const renderProfile = (profile) => {
-    const { name, avatar = null } = profile;
-    return <Profile name={name} avatar={avatar ? avatar.url : null} noName />;
-  };
-
   const renderRemove = (id) => {
     return (
       <OverlayRemove>
         <h3>Are you sure?</h3>
-        <p>Confirming this action will remove this deliveryman permanently.</p>
+        <p>Confirming this action will remove this recipient permanently.</p>
         <footer>
           <Button onClick={() => dispatch(closeOverlay())}>Cancel</Button>
-          <Button
-            primary
-            onClick={() => dispatch(deliverymanRemoveRequest(id))}
-          >
+          <Button primary onClick={() => dispatch(recipientRemoveRequest(id))}>
             Yes, I'm sure
           </Button>
         </footer>
@@ -59,19 +50,10 @@ export default function DeliverymenList({ history, match }) {
   };
 
   const deliverymenTotal = useSelector(
-    (state) => state.deliveryman.deliverymenTotal
+    (state) => state.recipient.deliverymenTotal
   );
 
-  const deliverymen = useSelector((state) =>
-    state.deliveryman.deliverymen.map((deliverymanItem) => {
-      const profile = renderProfile(deliverymanItem);
-
-      return {
-        ...deliverymanItem,
-        profile,
-      };
-    })
-  );
+  const recipients = useSelector((state) => state.recipient.recipients);
 
   useEffect(() => {
     async function fetchOrders() {
@@ -81,12 +63,12 @@ export default function DeliverymenList({ history, match }) {
         behavior: 'smooth',
       });
 
-      const deliverymenParams = {
+      const recipientsParams = {
         page,
         search: queryInput !== '' ? queryInput : null,
       };
 
-      dispatch(deliverymanFetchAllRequest(deliverymenParams));
+      dispatch(recipientFetchAllRequest(recipientsParams));
     }
 
     fetchOrders();
@@ -112,19 +94,19 @@ export default function DeliverymenList({ history, match }) {
 
   return (
     <>
-      <Heading title="Manage Deliverymen" />
+      <Heading title="Manage Recipients" />
       <Actions>
         <InputControl noMargin autoWidth iconLeft>
           <input
             type="text"
-            placeholder="Find deliverymen"
+            placeholder="Find recipients"
             onChange={(e) => setQuery(e.target.value)}
           />
           <MdSearch color="#999" size={21} />
         </InputControl>
         <Button
           primary
-          onClick={() => history.push('/deliverymen/create')}
+          onClick={() => history.push('/recipients/create')}
           icon={<MdAdd color="#fff" size={16} />}
         >
           New
@@ -136,31 +118,32 @@ export default function DeliverymenList({ history, match }) {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Picture</th>
                 <th>Name</th>
-                <th>Email</th>
+                <th>Address</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {deliverymen.map((deliveryman) => (
-                <tr key={deliveryman.id}>
-                  <td>#{deliveryman.id}</td>
-                  <td>{deliveryman.profile}</td>
-                  <td>{deliveryman.name}</td>
-                  <td>{deliveryman.email}</td>
+              {recipients.map((recipient) => (
+                <tr key={recipient.id}>
+                  <td>#{recipient.id}</td>
+                  <td>{recipient.name}</td>
+                  <td>
+                    {recipient.address}, {recipient.number}, {recipient.city} -{' '}
+                    {recipient.state}
+                  </td>
                   <td>
                     <Popover trigger={<MdMoreHoriz color="#666" size={18} />}>
                       <PopoverButton
                         clickAction={() =>
-                          handleActionClick('edit', deliveryman.id)
+                          handleActionClick('edit', recipient.id)
                         }
                         icon={<MdEdit color="#4D85EE" size={16} />}
                         label="Edit"
                       />
                       <PopoverButton
                         clickAction={() =>
-                          handleActionClick('remove', deliveryman.id)
+                          handleActionClick('remove', recipient.id)
                         }
                         icon={<MdDeleteForever color="#DE3B3B" size={16} />}
                         label="Remove"
@@ -180,7 +163,7 @@ export default function DeliverymenList({ history, match }) {
                 <MdChevronLeft size={14} color="#fff" />
               </button>
               <button
-                disabled={deliverymen.length < 10}
+                disabled={recipients.length < 10}
                 onClick={() => handlePagination('next')}
               >
                 <MdChevronRight size={14} color="#fff" />

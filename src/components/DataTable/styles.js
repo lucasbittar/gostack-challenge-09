@@ -43,6 +43,11 @@ export const Container = styled.table.attrs({
     padding: ${cellPadding};
     background: #fff;
 
+    > span {
+      width: 90%;
+      display: inline-block;
+    }
+
     &:last-child {
       text-align: right;
       padding-right: 20px;
