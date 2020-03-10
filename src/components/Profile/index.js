@@ -14,16 +14,18 @@ const initials = (name) => {
   return firstInitial;
 };
 
-export default function Profile({ name, avatar }) {
+export default function Profile({ name, avatar, noName, border }) {
   const color = randomColor();
   return (
     <Container>
       {avatar ? (
         <img src={avatar} alt={name} />
       ) : (
-        <Initials color={color.hexString()}>{initials(name)}</Initials>
+        <Initials border={border} color={color.hexString()}>
+          {initials(name)}
+        </Initials>
       )}
-      <span>{name}</span>
+      {!noName && <span>{name}</span>}
     </Container>
   );
 }

@@ -2,49 +2,57 @@ import produce from 'immer';
 
 const INITIAL_STATE = {
   saving: false,
+  name: '',
+  email: '',
+  avatar: null,
   deliverymen: [],
   deliverymenTotal: 0,
 };
 
-export default function order(state = INITIAL_STATE, action) {
+export default function deliveryman(state = INITIAL_STATE, action) {
   return produce(state, (draft) => {
     switch (action.type) {
-      /*
-      case '@order/INPUT_CHANGE': {
-        console.tron.log('ACTION', action.payload);
+      case '@deliveryman/INPUT_CHANGE': {
         draft[action.payload.input] = action.payload.value;
         break;
       }
-      */
       case '@deliveryman/FETCH_ALL_SUCCESS': {
         draft.deliverymen = action.payload.rows;
         draft.deliverymenTotal = action.payload.count;
         break;
       }
-      /*
-      case '@order/FETCH_SUCCESS': {
-        draft.product = action.payload.product;
-        draft.deliveryman = action.payload.deliveryman_id;
-        draft.recipient = action.payload.recipient_id;
+      case '@deliveryman/FETCH_SUCCESS': {
+        draft.name = action.payload.name;
+        draft.email = action.payload.email;
+        draft.avatar = action.payload.avatar;
         break;
       }
-      case '@order/CREATE_REQUEST': {
+      case '@deliveryman/UPLOAD_AVATAR_REQUEST': {
+        break;
+      }
+      case '@deliveryman/UPLOAD_AVATAR_SUCCESS': {
+        draft.avatar = {
+          id: action.payload.data.id,
+          url: action.payload.data.url,
+        };
+        break;
+      }
+      case '@deliveryman/CREATE_REQUEST': {
         draft.saving = true;
         break;
       }
-      case '@order/CREATE_SUCCESS': {
+      case '@deliveryman/CREATE_SUCCESS': {
         draft.saving = false;
         break;
       }
-      case '@order/UPDATE_REQUEST': {
+      case '@deliveryman/UPDATE_REQUEST': {
         draft.saving = true;
         break;
       }
-      case '@order/UPDATE_SUCCESS': {
+      case '@deliveryman/UPDATE_SUCCESS': {
         draft.saving = false;
         break;
       }
-      */
       default:
     }
   });

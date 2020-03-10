@@ -17,6 +17,7 @@ export const Container = styled.div`
 export const Initials = styled.div`
   color: ${(props) => darken(0.04, props.color)};
   background-color: ${(props) => transparentize(0.9, props.color)};
+  border: ${(props) => props.border && `1px dashed ${props.color}`};
   display: flex;
   align-items: center;
   justify-content: center;

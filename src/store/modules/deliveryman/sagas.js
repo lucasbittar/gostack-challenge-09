@@ -6,6 +6,7 @@ import history from '~/services/history';
 import api from '~/services/api';
 
 import {
+  deliverymanFetchAllRequest,
   deliverymanFetchAllSuccess,
   deliverymanFetchAllFailure,
   deliverymanFetchSuccess,
@@ -15,6 +16,8 @@ import {
   deliverymanUpdateSuccess,
   deliverymanUpdateFailure,
 } from './actions';
+
+import { closeOverlay } from '../overlay/actions';
 
 export function* fetchAllDeliverymen({ payload }) {
   try {
@@ -47,18 +50,32 @@ export function* fetchDeliveryman({ payload }) {
   }
 }
 
+export function* removeDeliveryman({ payload }) {
+  try {
+    const { id } = payload;
+
+    yield call(api.delete, `deliverymen/${id}`);
+
+    toast.success('Deliveryman successfully removed!');
+    yield put(closeOverlay());
+    yield put(deliverymanFetchAllRequest());
+  } catch (err) {
+    toast.error('Something went wrong. Please try again');
+  }
+}
+
 export function* createDeliveryman({ payload }) {
   try {
-    const { product, deliveryman_id, recipient_id } = payload;
+    const { name, email, avatar_id } = payload;
 
     const response = yield call(api.post, `deliverymen`, {
-      deliveryman_id,
-      recipient_id,
-      product,
+      name,
+      email,
+      avatar_id,
     });
 
     yield put(deliverymanCreateSuccess(response.data));
-    toast.success('deliveryman successfully created!');
+    toast.success('Deliveryman successfully created!');
   } catch (err) {
     yield put(deliverymanCreateFailure());
     toast.error('Something went wrong. Please try again.');
@@ -67,12 +84,13 @@ export function* createDeliveryman({ payload }) {
 
 export function* updateDeliveryman({ payload }) {
   try {
-    const { id, product, deliveryman_id, recipient_id } = payload;
+    const { id, name, email, avatar_id } = payload;
 
     const response = yield call(api.put, `deliverymen/${id}`, {
-      deliveryman_id,
-      recipient_id,
-      product,
+      id,
+      name,
+      email,
+      avatar_id,
     });
 
     yield put(deliverymanUpdateSuccess(response.data));
@@ -88,4 +106,5 @@ export default all([
   takeLatest('@deliveryman/FETCH_REQUEST', fetchDeliveryman),
   takeLatest('@deliveryman/CREATE_REQUEST', createDeliveryman),
   takeLatest('@deliveryman/UPDATE_REQUEST', updateDeliveryman),
+  takeLatest('@deliveryman/REMOVE_REQUEST', removeDeliveryman),
 ]);

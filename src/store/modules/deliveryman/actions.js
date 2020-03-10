@@ -72,9 +72,42 @@ export function deliverymanUpdateSuccess(id, data) {
   };
 }
 
+export function deliverymanAvatarUploadRequest(data) {
+  return {
+    type: '@deliveryman/UPLOAD_AVATAR_REQUEST',
+    payload: { data },
+  };
+}
+
+export function deliverymanAvatarUploadSuccess(data) {
+  return {
+    type: '@deliveryman/UPLOAD_AVATAR_SUCCESS',
+    payload: { data },
+  };
+}
+
 export function deliverymanUpdateFailure() {
   return {
     type: '@deliveryman/UPDATE_FAILURE',
+  };
+}
+
+export function deliverymanRemoveRequest(id) {
+  return {
+    type: '@deliveryman/REMOVE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function deliverymanRemoveSuccess() {
+  return {
+    type: '@deliveryman/REMOVE_SUCCESS',
+  };
+}
+
+export function deliverymanRemoveFailure() {
+  return {
+    type: '@deliveryman/REMOVE_FAILURE',
   };
 }
 
