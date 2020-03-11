@@ -43,9 +43,18 @@ export default function RecipientForm({ history, match }) {
       fetchRecipient();
     } else {
       // Cleanup fields when creating new order
-      for (const key of Object.keys(current)) {
-        dispatch(recipientInputChange(key, ''));
-      }
+      const cleanupField = [
+        'name',
+        'address',
+        'number',
+        'address_2',
+        'city',
+        'state',
+        'zip_code',
+      ];
+      cleanupField.forEach((field) => {
+        dispatch(recipientInputChange(field, ''));
+      });
     }
   }, [recipient_id, isCreate, dispatch]);
 
