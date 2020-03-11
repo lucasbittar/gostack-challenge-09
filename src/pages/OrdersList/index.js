@@ -199,6 +199,7 @@ export default function OrdersList({ history, match }) {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Product</th>
                 <th>Recipient</th>
                 <th>Deliveryman</th>
                 <th>City</th>
@@ -211,6 +212,7 @@ export default function OrdersList({ history, match }) {
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td>#{order.id}</td>
+                  <td>{order.product}</td>
                   <td>{order.recipient.name}</td>
                   <td>{order.profile}</td>
                   <td>{order.recipient.city}</td>
