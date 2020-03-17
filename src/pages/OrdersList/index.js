@@ -49,7 +49,7 @@ export default function OrdersList({ history, match }) {
     if (end_date !== null && canceled_at === null)
       return <Status status="delivered">Delivered</Status>;
     if (start_date && end_date === null)
-      return <Status status="pickedup">Picked up</Status>;
+      return <Status status="pickedup">In transit</Status>;
   };
 
   const renderProfile = (profile) => {

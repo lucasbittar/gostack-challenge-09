@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import InputMask from 'react-input-mask';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
@@ -178,11 +179,12 @@ export default function RecipientForm({ history, match }) {
             <Column size={33}>
               <InputControl>
                 <label>Zip code</label>
-                <input
+                <InputMask
                   name="zip_code"
                   value={current.zip_code}
                   onChange={(e) => handleInputChange('zip_code', e)}
                   type="text"
+                  mask="99999-999"
                   placeholder="09960-580"
                 />
               </InputControl>

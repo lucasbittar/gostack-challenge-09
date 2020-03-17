@@ -36,14 +36,14 @@ export default function OrderForm({ history, match }) {
   const recipient = useSelector((state) => state.order.recipient);
   const recipients = useSelector((state) =>
     state.recipient.recipients.map((r) => ({
-      id: r.id,
-      title: r.name,
+      value: r.id,
+      label: r.name,
     }))
   );
   const deliverymen = useSelector((state) =>
     state.deliveryman.deliverymen.map((d) => ({
-      id: d.id,
-      title: d.name,
+      value: d.id,
+      label: d.name,
     }))
   );
 
@@ -77,6 +77,10 @@ export default function OrderForm({ history, match }) {
 
   function handleInputChange(input, e) {
     dispatch(orderInputChange(input, e.target.value));
+  }
+
+  function handleSelectChange(input, e) {
+    dispatch(orderInputChange(input, e.value));
   }
 
   async function handleSubmit() {
@@ -131,7 +135,7 @@ export default function OrderForm({ history, match }) {
                 <Select
                   name="recipient"
                   value={recipient}
-                  onChange={(e) => handleInputChange('recipient', e)}
+                  onChange={(e) => handleSelectChange('recipient', e)}
                   placeholder="Select a recipient"
                   options={recipients}
                 />
@@ -143,7 +147,7 @@ export default function OrderForm({ history, match }) {
                 <Select
                   name="deliveryman"
                   value={deliveryman}
-                  onChange={(e) => handleInputChange('deliveryman', e)}
+                  onChange={(e) => handleSelectChange('deliveryman', e)}
                   placeholder="Select a deliveryman"
                   options={deliverymen}
                 />
