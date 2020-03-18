@@ -24,7 +24,7 @@ export function* fetchAllOrders({ payload }) {
     const { page, search } = payload;
 
     const response = yield call(api.get, 'orders', {
-      params: { page, search: search !== '' ? search : null },
+      params: { page, q: search !== '' ? search : null },
     });
 
     yield put(orderFetchAllSuccess(response.data));

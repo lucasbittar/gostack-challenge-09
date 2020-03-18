@@ -24,7 +24,7 @@ export function* fetchAllRecipients({ payload }) {
     const { page, search } = payload;
 
     const response = yield call(api.get, 'recipients', {
-      params: { page, search: search !== '' ? search : null },
+      params: { page, q: search !== '' ? search : null },
     });
 
     yield put(recipientFetchAllSuccess(response.data));

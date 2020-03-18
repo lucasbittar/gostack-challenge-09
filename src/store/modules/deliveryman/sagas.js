@@ -24,7 +24,7 @@ export function* fetchAllDeliverymen({ payload }) {
     const { page, search } = payload;
 
     const response = yield call(api.get, 'deliverymen', {
-      params: { page, search: search !== '' ? search : null },
+      params: { page, q: search !== '' ? search : null },
     });
 
     yield put(deliverymanFetchAllSuccess(response.data));
