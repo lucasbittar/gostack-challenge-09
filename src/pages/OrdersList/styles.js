@@ -62,3 +62,17 @@ export const Status = styled.span`
       }
     `}
 `;
+
+export const ToggleFilter = styled.button`
+  background: transparent;
+  border: 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
+  color: ${(props) => (props.active ? '#7d40e7' : '#666')};
+  border-color: ${(props) => (props.active ? '#7d40e7' : 'transparent')};
+  align-self: center;
+  padding-bottom: 5px;
+  transition: all 300ms ease-out;
+`;

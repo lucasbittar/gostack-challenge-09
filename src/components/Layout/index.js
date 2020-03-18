@@ -24,8 +24,15 @@ export const Column = styled.div`
 export const Actions = styled.div`
   display: flex;
   width: 100%;
-  justify-content: space-between;
   margin-top: 20px;
+
+  div {
+    margin-right: auto;
+  }
+
+  button {
+    margin-left: 12px;
+  }
 `;
 
 export const InputControl = styled.div`

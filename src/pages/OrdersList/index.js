@@ -19,7 +19,7 @@ import {
 } from '~/store/modules/order/actions';
 import { openOverlay, closeOverlay } from '~/store/modules/overlay/actions';
 
-import { Status } from './styles';
+import { Status, ToggleFilter } from './styles';
 
 import { Actions, InputControl, NotFound } from '~/components/Layout';
 
@@ -35,6 +35,7 @@ import Profile from '~/components/Profile';
 
 export default function OrdersList({ history, match }) {
   const [page, setPage] = useState(1);
+  const [withIssues, setWithIssues] = useState(null);
   const [query, setQuery] = useState('');
   const [queryInput] = useDebounce(query, 500);
 
@@ -142,6 +143,7 @@ export default function OrdersList({ history, match }) {
       });
 
       const ordersParams = {
+        withIssues,
         page,
         search: queryInput !== '' ? queryInput : null,
       };
@@ -150,7 +152,7 @@ export default function OrdersList({ history, match }) {
     }
 
     fetchOrders();
-  }, [page, queryInput, dispatch]);
+  }, [page, queryInput, withIssues, dispatch]);
 
   function handleActionClick(action, id) {
     const { url } = match;
@@ -169,8 +171,12 @@ export default function OrdersList({ history, match }) {
     }
   }
 
-  async function handlePagination(action) {
-    await setPage(action === 'prev' ? page - 1 : page + 1);
+  function toggleOrdersWithIssues() {
+    setWithIssues(!withIssues);
+  }
+
+  function handlePagination(action) {
+    setPage(action === 'prev' ? page - 1 : page + 1);
   }
 
   return (
@@ -185,6 +191,9 @@ export default function OrdersList({ history, match }) {
           />
           <MdSearch color="#999" size={21} />
         </InputControl>
+        <ToggleFilter active={withIssues} onClick={toggleOrdersWithIssues}>
+          Orders with issues
+        </ToggleFilter>
         <Button
           primary
           onClick={() => history.push('/orders/create')}
@@ -225,11 +234,15 @@ export default function OrdersList({ history, match }) {
                         icon={<MdRemoveRedEye color="#8E5BE8" size={16} />}
                         label="View"
                       />
-                      <PopoverButton
-                        clickAction={() => handleActionClick('edit', order.id)}
-                        icon={<MdEdit color="#4D85EE" size={16} />}
-                        label="Edit"
-                      />
+                      {order.canceled_at === null && (
+                        <PopoverButton
+                          clickAction={() =>
+                            handleActionClick('edit', order.id)
+                          }
+                          icon={<MdEdit color="#4D85EE" size={16} />}
+                          label="Edit"
+                        />
+                      )}
                       <PopoverButton
                         clickAction={() =>
                           handleActionClick('remove', order.id)

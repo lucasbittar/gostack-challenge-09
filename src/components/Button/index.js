@@ -10,7 +10,7 @@ export default function Button({
   primary,
 }) {
   return (
-    <Container onClick={() => onClick()} primary={primary} type={type}>
+    <Container onClick={() => onClick()} type={type} primary={primary}>
       {icon}
       {children}
     </Container>

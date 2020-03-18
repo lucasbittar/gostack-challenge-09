@@ -6,8 +6,8 @@ export const Container = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  min-width: 115px;
+  padding: 10px 20px;
+  min-width: 95px;
   border-radius: 4px;
   color: #fff;
   text-transform: uppercase;

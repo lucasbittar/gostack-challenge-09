@@ -21,10 +21,14 @@ import { closeOverlay } from '../overlay/actions';
 
 export function* fetchAllOrders({ payload }) {
   try {
-    const { page, search } = payload;
+    const { page, search, withIssues } = payload;
 
     const response = yield call(api.get, 'orders', {
-      params: { page, q: search !== '' ? search : null },
+      params: {
+        page,
+        q: search !== '' ? search : null,
+        withIssues: withIssues || null,
+      },
     });
 
     yield put(orderFetchAllSuccess(response.data));
