@@ -172,6 +172,7 @@ export default function OrdersList({ history, match }) {
   }
 
   function toggleOrdersWithIssues() {
+    setPage(1);
     setWithIssues(!withIssues);
   }
 

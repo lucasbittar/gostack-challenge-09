@@ -7997,6 +7997,10 @@ react-select@3.0.8:
     react-input-autosize "^2.2.2"
     react-transition-group "^2.2.1"
 
+react-staggered-animation@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-staggered-animation/-/react-staggered-animation-0.0.2.tgz#7458086e747548e85f0ebecd4a3a6e67cf117844"
+
 react-text-truncate@0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/react-text-truncate/-/react-text-truncate-0.16.0.tgz#03bbb942437dfba5cc0faf614f1339f888926f80"
