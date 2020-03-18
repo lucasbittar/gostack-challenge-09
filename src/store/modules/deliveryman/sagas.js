@@ -1,9 +1,9 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import history from '~/services/history';
-
 import api from '~/services/api';
+import errorHandling from '~/utils/errorHandling';
+import history from '~/services/history';
 
 import {
   deliverymanFetchAllRequest,
@@ -30,8 +30,8 @@ export function* fetchAllDeliverymen({ payload }) {
     yield put(deliverymanFetchAllSuccess(response.data));
     toast.success('Deliverymen successfully loaded!');
   } catch (err) {
+    errorHandling(err);
     yield put(deliverymanFetchAllFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 
@@ -44,9 +44,9 @@ export function* fetchDeliveryman({ payload }) {
     yield put(deliverymanFetchSuccess(response.data));
     toast.success('Deliveryman successfully loaded!');
   } catch (err) {
+    errorHandling(err);
     yield put(deliverymanFetchFailure());
     history.push('/deliverymen');
-    toast.error('Deliveryman not found.');
   }
 }
 
@@ -60,7 +60,7 @@ export function* removeDeliveryman({ payload }) {
     yield put(closeOverlay());
     yield put(deliverymanFetchAllRequest());
   } catch (err) {
-    toast.error('Something went wrong. Please try again');
+    errorHandling(err);
   }
 }
 
@@ -77,8 +77,8 @@ export function* createDeliveryman({ payload }) {
     yield put(deliverymanCreateSuccess(response.data));
     toast.success('Deliveryman successfully created!');
   } catch (err) {
+    errorHandling(err);
     yield put(deliverymanCreateFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 
@@ -96,8 +96,8 @@ export function* updateDeliveryman({ payload }) {
     yield put(deliverymanUpdateSuccess(response.data));
     toast.success('Deliveryman successfully updated!');
   } catch (err) {
+    errorHandling(err);
     yield put(deliverymanUpdateFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 

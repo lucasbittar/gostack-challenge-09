@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import api from '~/services/api';
 
@@ -10,9 +10,8 @@ import { deliverymanAvatarUploadSuccess } from '~/store/modules/deliveryman/acti
 import AvatarPlaceholder from '~/assets/avatar_placeholder.png';
 import Profile from '~/components/Profile';
 
-export default function AvatarInput({ avatar }) {
+export default function AvatarInput({ avatar, name }) {
   const dispatch = useDispatch();
-  const name = useSelector((state) => state.deliveryman.name);
 
   async function handleChange(e) {
     const data = new FormData();

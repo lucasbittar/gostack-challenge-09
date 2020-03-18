@@ -2,6 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
 import api from '~/services/api';
+import errorHandling from '~/utils/errorHandling';
 
 import {
   issueFetchAllRequest,
@@ -22,8 +23,8 @@ export function* fetchAllIssues({ payload }) {
     yield put(issueFetchAllSuccess(response.data));
     toast.success('Issues successfully loaded!');
   } catch (err) {
+    errorHandling(err);
     yield put(issueFetchAllFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 
@@ -37,7 +38,7 @@ export function* cancelOrder({ payload }) {
     yield put(closeOverlay());
     yield put(issueFetchAllRequest());
   } catch (err) {
-    toast.error('Something went wrong. Please try again');
+    errorHandling(err);
   }
 }
 

@@ -1,6 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 
+import errorHandling from '~/utils/errorHandling';
 import api from '~/services/api';
 import history from '~/services/history';
 
@@ -18,8 +18,8 @@ export function* login({ payload }) {
     yield put(loginSuccess(token, user));
     history.push('/orders');
   } catch (err) {
+    errorHandling(err);
     yield put(loginFailure());
-    toast.error('Invalid credentials, try again.');
   }
 }
 

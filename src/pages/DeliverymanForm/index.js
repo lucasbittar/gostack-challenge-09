@@ -100,7 +100,7 @@ export default function DeliverymanForm({ history, match }) {
       </Heading>
       <FormWrapper>
         <form schema={schema}>
-          <AvatarInput avatar={avatar} />
+          <AvatarInput avatar={avatar} name={isCreate ? '' : name} />
           <Row>
             <Column>
               <InputControl>

@@ -1,9 +1,9 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
 
-import history from '~/services/history';
-
 import api from '~/services/api';
+import errorHandling from '~/utils/errorHandling';
+import history from '~/services/history';
 
 import {
   recipientFetchAllRequest,
@@ -30,8 +30,8 @@ export function* fetchAllRecipients({ payload }) {
     yield put(recipientFetchAllSuccess(response.data));
     toast.success('Recipients successfully loaded!');
   } catch (err) {
+    errorHandling(err);
     yield put(recipientFetchAllFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 
@@ -44,9 +44,9 @@ export function* fetchRecipient({ payload }) {
     yield put(recipientFetchSuccess(response.data));
     toast.success('Recipient successfully loaded!');
   } catch (err) {
+    errorHandling(err);
     yield put(recipientFetchFailure());
     history.push('/recipients');
-    toast.error('Recipient not found.');
   }
 }
 
@@ -60,7 +60,7 @@ export function* removeRecipient({ payload }) {
     yield put(closeOverlay());
     yield put(recipientFetchAllRequest());
   } catch (err) {
-    toast.error('Something went wrong. Please try again');
+    errorHandling(err);
   }
 }
 
@@ -74,7 +74,7 @@ export function* createRecipient({ payload }) {
     toast.success('Recipient successfully created!');
   } catch (err) {
     yield put(recipientCreateFailure());
-    toast.error('Something went wrong. Please try again.');
+    errorHandling(err);
   }
 }
 
@@ -87,8 +87,8 @@ export function* updateRecipient({ payload }) {
     yield put(recipientUpdateSuccess(response.data));
     toast.success('Recipient successfully updated!');
   } catch (err) {
+    errorHandling(err);
     yield put(recipientUpdateFailure());
-    toast.error('Something went wrong. Please try again.');
   }
 }
 

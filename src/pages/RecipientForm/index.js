@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
   zip_code: Yup.string().required('Please type a zip code'),
   state: Yup.string().required('Please type a state'),
   city: Yup.string().required('Please type a city'),
-  number: Yup.number().required('Please type a number'),
+  number: Yup.string().required('Please type a number'),
   address: Yup.string().required('Please type an address'),
   name: Yup.string().required('Please type a name'),
 });
