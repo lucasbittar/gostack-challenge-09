@@ -32,6 +32,23 @@ const OverlayDetails = styled.div`
     margin-bottom: 6px;
   }
 
+  li {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    &:last-child {
+      border: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  small {
+    display: block;
+    color: #999;
+    margin-top: 4px;
+  }
+
   hr {
     width: 100%;
     height: 1px;

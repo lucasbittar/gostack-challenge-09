@@ -51,6 +51,11 @@ export const Container = styled.div`
       top: 15px;
       right: 15px;
       z-index: 1;
+
+      + div {
+        overflow-y: auto;
+        max-height: 70vh;
+      }
     }
   }
 `;

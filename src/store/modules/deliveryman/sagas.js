@@ -68,6 +68,8 @@ export function* createDeliveryman({ payload }) {
   try {
     const { name, email, avatar_id } = payload;
 
+    console.tron.log('PAYLOAD', payload);
+
     const response = yield call(api.post, `deliverymen`, {
       name,
       email,
@@ -76,6 +78,7 @@ export function* createDeliveryman({ payload }) {
 
     yield put(deliverymanCreateSuccess(response.data));
     toast.success('Deliveryman successfully created!');
+    history.push('/deliverymen');
   } catch (err) {
     errorHandling(err);
     yield put(deliverymanCreateFailure());

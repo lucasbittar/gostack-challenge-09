@@ -70,7 +70,7 @@ export default function DeliverymanForm({ history, match }) {
           const deliveryman = {
             name,
             email,
-            avatar_id: avatar.id,
+            avatar_id: avatar ? avatar.id : null,
           };
           if (isCreate) {
             dispatch(deliverymanCreateRequest(deliveryman));

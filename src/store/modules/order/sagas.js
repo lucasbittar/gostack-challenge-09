@@ -80,6 +80,7 @@ export function* createOrder({ payload }) {
 
     yield put(orderCreateSuccess(response.data));
     toast.success('Order successfully created!');
+    history.push('/orders');
   } catch (err) {
     errorHandling(err);
     yield put(orderCreateFailure());

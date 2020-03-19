@@ -44,7 +44,7 @@ export const Container = styled.table.attrs({
     background: #fff;
 
     > span {
-      width: 90%;
+      width: 80%;
       display: inline-block;
     }
 

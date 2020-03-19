@@ -47,26 +47,33 @@ export default function IssuesList() {
     );
   };
 
-  const renderDetails = (issue) => {
+  const renderDetails = (order) => {
     return (
       <OverlayDetails>
-        {issue.canceled_at !== null && (
+        {order.canceled_at !== null && (
           <h4>
             <span>
               This order was canceled on{' '}
-              {format(new Date(issue.canceled_at), "PPP 'at' p")}
+              {format(new Date(order.canceled_at), "PPP 'at' p")}
             </span>
           </h4>
         )}
-        <h3>View Issue</h3>
-        <p>{issue.full_description}</p>
+        <h3>{order.issues.length !== 1 ? 'View Issues' : 'View Issue'}</h3>
+        <ul>
+          {order.issues.map((issue) => (
+            <li>
+              <p>{issue.full_description}</p>
+              <small>{format(new Date(issue.createdAt), "PPP 'at' p")}</small>
+            </li>
+          ))}
+        </ul>
       </OverlayDetails>
     );
   };
 
   const issuesTotal = useSelector((state) => state.issue.issuesTotal);
 
-  const issues = useSelector((state) => state.issue.issues);
+  const ordersWithIssues = useSelector((state) => state.issue.issues);
 
   useEffect(() => {
     async function fetchOrders() {
@@ -77,6 +84,7 @@ export default function IssuesList() {
       });
 
       const issuesParams = {
+        withIssues: true,
         page,
       };
 
@@ -111,36 +119,38 @@ export default function IssuesList() {
             <thead>
               <tr>
                 <th>Order ID</th>
-                <th>Description</th>
+                <th># of Issues</th>
+                <th>Last Added</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {issues.map((issue) => (
-                <tr key={issue.id}>
-                  <td>#{issue.order_id}</td>
+              {ordersWithIssues.map((order) => (
+                <tr key={order.id}>
+                  <td>#{order.id}</td>
+                  <td>{order.issues.length}</td>
                   <td>
-                    {issue.canceled_at !== null && (
+                    {order.canceled_at !== null && (
                       <IssueCanceled>Order canceled</IssueCanceled>
                     )}
                     <TextTruncate
                       line={1}
                       truncateText="…"
                       element="span"
-                      text={issue.full_description}
+                      text={order.issues[0].full_description}
                     />
                   </td>
                   <td>
                     <Popover trigger={<MdMoreHoriz color="#666" size={18} />}>
                       <PopoverButton
-                        clickAction={() => handleActionClick('view', issue)}
+                        clickAction={() => handleActionClick('view', order)}
                         icon={<MdRemoveRedEye color="#8E5BE8" size={16} />}
-                        label="View"
+                        label={order.issues.length !== 1 ? 'View All' : 'View'}
                       />
-                      {issue.canceled_at === null && (
+                      {order.canceled_at === null && (
                         <PopoverButton
                           clickAction={() =>
-                            handleActionClick('remove', issue.id)
+                            handleActionClick('remove', order.issues[0].id)
                           }
                           icon={<MdDeleteForever color="#DE3B3B" size={16} />}
                           label="Cancel Order"
@@ -161,7 +171,7 @@ export default function IssuesList() {
                 <MdChevronLeft size={14} color="#fff" />
               </button>
               <button
-                disabled={issues.length < 10}
+                disabled={ordersWithIssues.length < 10}
                 onClick={() => handlePagination('next')}
               >
                 <MdChevronRight size={14} color="#fff" />

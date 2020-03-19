@@ -45,6 +45,10 @@ export default function deliveryman(state = INITIAL_STATE, action) {
         draft.saving = false;
         break;
       }
+      case '@deliveryman/CREATE_FAILURE': {
+        draft.saving = false;
+        break;
+      }
       case '@deliveryman/UPDATE_REQUEST': {
         draft.saving = true;
         break;
