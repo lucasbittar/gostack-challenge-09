@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import api from '~/services/api';
@@ -19,7 +20,7 @@ export default function AvatarInput({ avatar, name }) {
     data.append('file', e.target.files[0]);
 
     const response = await api.post('upload', data);
-    console.tron.log('FILE', data);
+    // console.tron.log('FILE', data);
 
     const { id, url } = response.data;
 
@@ -47,3 +48,8 @@ export default function AvatarInput({ avatar, name }) {
     </Container>
   );
 }
+
+AvatarInput.propTypes = {
+  avatar: PropTypes.object,
+  name: PropTypes.string,
+};

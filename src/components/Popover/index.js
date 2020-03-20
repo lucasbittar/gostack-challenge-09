@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import { Container } from './styles';
 
@@ -56,3 +57,12 @@ export default function Popover({ children, trigger }) {
     </Container>
   );
 }
+
+Popover.propTypes = {
+  children: PropTypes.array.isRequired,
+  trigger: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+    PropTypes.object,
+  ]),
+};

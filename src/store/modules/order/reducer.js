@@ -1,7 +1,7 @@
 import produce from 'immer';
 
 const INITIAL_STATE = {
-  product: null,
+  product: '',
   deliveryman: null,
   recipient: null,
   saving: false,

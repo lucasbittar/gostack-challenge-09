@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import randomColor from 'random-color';
 
 import { Container, Initials } from './styles';
@@ -29,3 +30,10 @@ export default function Profile({ name, avatar, noName, border }) {
     </Container>
   );
 }
+
+Profile.propTypes = {
+  name: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
+  noName: PropTypes.bool,
+  border: PropTypes.bool,
+};

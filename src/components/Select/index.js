@@ -1,16 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { transparentize } from 'polished';
-// import { MdExpandMore } from 'react-icons/md';
 
 import { SelectWrapper } from './styles';
 
 export default function SelectInput({
-  options,
-  value,
   name,
-  placeholder,
   onChange,
+  options,
+  placeholder,
+  value,
 }) {
   const selected = options.filter((o) => {
     return o.value === value;
@@ -85,32 +85,10 @@ export default function SelectInput({
   );
 }
 
-/*
-export default function SelectInput({
-  options,
-  value,
-  name,
-  placeholder,
-  onChange,
-}) {
-  return (
-    <SelectWrapper>
-      <select
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e)}
-        className={value !== '' ? 'active' : null}
-      >
-        <option value="">{placeholder}</option>
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.title}
-          </option>
-        ))}
-      </select>
-      <MdExpandMore color="#ddd" size={26} />
-    </SelectWrapper>
-  );
-}
-  */
+SelectInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
+  placeholder: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Container } from './styles';
 
@@ -10,3 +11,8 @@ export default function Heading({ title, children }) {
     </Container>
   );
 }
+
+Heading.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.array,
+};

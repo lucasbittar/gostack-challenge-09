@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Container } from './styles';
 
@@ -10,3 +11,9 @@ export default function PopoverButton({ icon, label, clickAction }) {
     </Container>
   );
 }
+
+PopoverButton.propTypes = {
+  icon: PropTypes.element,
+  label: PropTypes.string.isRequired,
+  clickAction: PropTypes.func.isRequired,
+};
