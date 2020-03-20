@@ -11,10 +11,7 @@
 Create the front-end for a fake logistics company app called FastFeet.
 
 ### Instructions ###
-```
-yarn install && yarn start
-```
-Once yarn is running, all of the requests should point to: http://localhost:3000/.
+You can follow the detailed instructions [here](https://github.com/lucasbittar/gostack-fastfeet#setup-front-end).
 
 ### Description ###
 Front-end of a fake logistics company app called FastFeet.
@@ -23,6 +20,10 @@ Tools and technologies used on this project:
 
 - Javascript ES6
 - ReactJS
+- Redux
+- Redux Saga
+- Immer
+- Styled Components
 
 Thanks for checking this project out! Cheers!
 
